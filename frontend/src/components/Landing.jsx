@@ -47,7 +47,7 @@ export default function Landing() {
           transition={{ delay: 0.45 }}
           style={{ opacity: 0.85, marginTop: 10 }}
         >
-          Intelligent evaluation of handwritten exams using AI
+          Intelligent evaluation of handwritten exams
         </motion.p>
 
         <motion.button

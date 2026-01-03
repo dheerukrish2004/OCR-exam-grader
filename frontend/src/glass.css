@@ -1,27 +1,21 @@
 .glass {
   position: relative;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(180, 140, 255, 0.18),
-      rgba(80, 40, 120, 0.12)
-    );
+  background: linear-gradient(
+    180deg,
+    rgba(180,140,255,0.18),
+    rgba(80,40,120,0.12)
+  );
   backdrop-filter: blur(22px);
   -webkit-backdrop-filter: blur(22px);
-
   border-radius: 26px;
-
-  border: 1px solid rgba(255, 255, 255, 0.22);
-
+  border: 1px solid rgba(255,255,255,0.22);
   box-shadow:
-    inset 0 1px 1px rgba(255, 255, 255, 0.35),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.25),
-    0 30px 80px rgba(0, 0, 0, 0.55);
-
+    inset 0 1px 1px rgba(255,255,255,0.35),
+    inset 0 -1px 1px rgba(0,0,0,0.25),
+    0 30px 80px rgba(0,0,0,0.55);
   overflow: hidden;
 }
 
-/* NOISE / TEXTURE LAYER */
 .glass::before {
   content: "";
   position: absolute;
@@ -29,20 +23,58 @@
   background-image: url("data:image/svg+xml;utf8,\
   <svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'>\
     <filter id='n'>\
-      <feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/>\
+      <feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/>\
     </filter>\
     <rect width='200' height='200' filter='url(%23n)' opacity='0.06'/>\
   </svg>");
-  pointer-events: none;
   mix-blend-mode: overlay;
+  pointer-events: none;
 }
 
-/* GLOW EDGE */
-.glass::after {
+/* ===== GLASS BUTTON ===== */
+.glass-btn {
+  position: relative;
+  padding: 14px 38px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(
+    135deg,
+    rgba(170,120,255,0.95),
+    rgba(120,70,220,0.95)
+  );
+  box-shadow:
+    inset 0 1px 1px rgba(255,255,255,0.35),
+    inset 0 -2px 3px rgba(0,0,0,0.35),
+    0 12px 30px rgba(120,70,220,0.55);
+  transition: all 0.25s ease;
+}
+
+.glass-btn::before {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: 26px;
-  box-shadow: inset 0 0 0 1px rgba(180, 140, 255, 0.25);
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,0.35),
+    rgba(255,255,255,0.05)
+  );
+  opacity: 0.6;
   pointer-events: none;
+}
+
+.glass-btn:hover {
+  transform: scale(1.08);
+}
+
+.glass-btn:active {
+  transform: scale(0.95);
+}
+
+.glass-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

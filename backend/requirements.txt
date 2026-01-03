@@ -1,0 +1,7 @@
+flask
+flask-cors
+paddleocr
+paddlepaddle
+sentence-transformers
+scikit-learn
+pyspellchecker
