@@ -1,25 +1,71 @@
 import { motion } from "framer-motion";
 import "../glass.css";
 import bg from "../assets/features-bg.jpg";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function Result() {
-  const [data, setData] = useState(null);
+  const [score, setScore] = useState(null);
+  const [typed, setTyped] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const pollingRef = useRef(null);
 
+  // ------------------------------
+  // Load score instantly
+  // ------------------------------
   useEffect(() => {
     fetch("http://127.0.0.1:5000/evaluate")
       .then(res => res.json())
       .then(res => {
-        if (!res.ready) {
-          setError(res.message);
-        } else {
-          setData(res);
-        }
+        if (res.ready) setScore(res.score);
+        else setError(res.message);
       })
-      .catch(() => {
-        setError("Failed to connect to backend");
-      });
+      .catch(() => setError("Backend not reachable"));
+  }, []);
+
+  // ------------------------------
+  // SAFE typing animation (FINAL)
+  // ------------------------------
+  const typeText = (rawText) => {
+    if (typeof rawText !== "string") return;
+
+    const text = rawText.trim(); // freeze + normalize
+    setTyped("");
+
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i >= text.length) {
+        clearInterval(interval);
+        return;
+      }
+
+      setTyped(prev => prev + text.charAt(i));
+      i++;
+    }, 20);
+  };
+
+  // ------------------------------
+  // Fetch feedback with polling
+  // ------------------------------
+  const getFeedback = () => {
+    setLoading(true);
+
+    pollingRef.current = setInterval(async () => {
+      const res = await fetch("http://127.0.0.1:5000/get-feedback");
+      const data = await res.json();
+
+      if (data.ready && typeof data.feedback === "string") {
+        clearInterval(pollingRef.current);
+        setLoading(false);
+        typeText(data.feedback);
+      }
+    }, 1200);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (pollingRef.current) clearInterval(pollingRef.current);
+    };
   }, []);
 
   return (
@@ -34,54 +80,33 @@ export default function Result() {
         alignItems: "center"
       }}
     >
-      <motion.div
-        className="glass"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 120 }}
-        style={{
-          width: 460,
-          padding: "50px",
-          textAlign: "center"
-        }}
-      >
-        {/* ERROR STATE */}
-        {error && (
-          <>
-            <h2>Evaluation Not Ready</h2>
-            <p style={{ opacity: 0.85, marginTop: 15 }}>{error}</p>
-          </>
-        )}
+      <motion.div className="glass" style={{ width: 480, padding: 50 }}>
+        {error && <p>{error}</p>}
 
-        {/* SUCCESS STATE */}
-        {data && (
+        {score !== null && (
           <>
             <h2>Final Score</h2>
+            <motion.h1>{score} / 100</motion.h1>
 
-            <motion.h1
-              initial={{ scale: 0.6 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring" }}
-              style={{ marginTop: 20 }}
-            >
-              {data.score} / 100
-            </motion.h1>
+            {!typed && (
+              <motion.button
+                className="glass-btn"
+                onClick={getFeedback}
+                whileHover={{ scale: 1.05 }}
+                style={{ marginTop: 30 }}
+                disabled={loading}
+              >
+                {loading ? "Analyzing Answer..." : "Show Feedback"}
+              </motion.button>
+            )}
 
-            <h3 style={{ marginTop: 30 }}>Feedback</h3>
-            <p style={{ opacity: 0.9, marginTop: 10 }}>
-              {data.feedback}
-            </p>
-
-            {data.improvements?.length > 0 && (
+            {typed && (
               <>
-                <h3 style={{ marginTop: 30 }}>Needs Improvement</h3>
-                <ul style={{ marginTop: 10, listStyle: "none", padding: 0 }}>
-                  {data.improvements.map((item, i) => (
-                    <li key={i} style={{ opacity: 0.85 }}>
-                      • {item}
-                    </li>
-                  ))}
-                </ul>
+                <h3 style={{ marginTop: 30 }}>Feedback</h3>
+                <p style={{ lineHeight: 1.6 }}>
+                  {typed}
+                  <span style={{ opacity: 0.4 }}>▌</span>
+                </p>
               </>
             )}
           </>
