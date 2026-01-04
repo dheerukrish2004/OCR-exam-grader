@@ -5,3 +5,6 @@ paddlepaddle
 sentence-transformers
 scikit-learn
 pyspellchecker
+opencv-python
+numpy
+rake-nltk
