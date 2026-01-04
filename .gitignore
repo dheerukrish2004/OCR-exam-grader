@@ -1,6 +1,12 @@
 # Python
 venv/
 __pycache__/
+*.pyc
+
+# Runtime generated files
+backend/student.png
+backend/temp.png
+uploads/
 
 # Node
 node_modules/
