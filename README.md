@@ -62,8 +62,8 @@ OCR-exam-grader/
 └── README.md
 ### RAG Implementation
 
-- `rag_ingest.py` — Ingests reference answers, rubrics, and concept documents into ChromaDB.
-- `rag_pipeline.py` — Retrieves relevant documents from ChromaDB based on the student answer.
-- `rag_config.py` — Contains RAG configuration.
-- `llm_feedback.py` — Sends the augmented evaluation prompt to Gemini and generates the score and feedback.
-- `test_rag.py` — Demonstrates the complete RAG flow: Ingestion → Retrieval → Augmentation → Generation.
+- rag_ingest.py — Ingests reference answers, rubrics, and concept documents into ChromaDB.
+- rag_pipeline.py — Retrieves relevant documents from ChromaDB based on the student answer.
+- rag_config.py — Contains RAG configuration.
+- llm_feedback.py — Sends the augmented evaluation prompt to Gemini and generates the score and feedback.
+- test_rag.py — Demonstrates the complete RAG flow: Ingestion → Retrieval → Augmentation → Generation.
