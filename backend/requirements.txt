@@ -8,3 +8,9 @@ pyspellchecker
 opencv-python
 numpy
 rake-nltk
+langchain
+langchain-huggingface
+langchain-chroma
+langchain-text-splitters
+chromadb
+python-dotenv

@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import "../glass.css";
-import bg from "../assets/features-bg.jpg";
+import bg from "../assets/bggf.jpg";
 
 export default function KeyUpload() {
   const navigate = useNavigate();
@@ -13,13 +12,18 @@ export default function KeyUpload() {
     const fd = new FormData();
     fd.append("file", file);
 
-    await fetch("http://127.0.0.1:5000/upload-key", {
-      method: "POST",
-      body: fd
-    });
+    try {
+      const res = await fetch("http://127.0.0.1:5000/upload-key", {
+        method: "POST",
+        body: fd
+      });
 
-    // 🔥 GO TO RESULT
-    navigate("/result");
+      if (!res.ok) throw new Error("Upload failed");
+
+      navigate("/result");
+    } catch {
+      alert("Failed to upload teacher answer key");
+    }
   };
 
   return (
@@ -34,35 +38,55 @@ export default function KeyUpload() {
         alignItems: "center"
       }}
     >
-      <motion.div
-        className="glass"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 120 }}
-        style={{
-          width: 420,
-          padding: "50px",
-          textAlign: "center"
-        }}
-      >
-        <h2>Upload Answer Key</h2>
+      <div style={{ display: "flex", gap: 40, width: "80%", maxWidth: 1100 }}>
 
-        <motion.input
-          type="file"
-          accept=".txt"
-          onChange={uploadKey}
-          whileHover={{ scale: 1.05 }}
+        <motion.div
+          whileHover={{ y: -8 }}
           style={{
-            marginTop: 25,
-            padding: 12,
-            borderRadius: 12,
+            flex: 2,
+            padding: 60,
+            borderRadius: 30,
+            background: "rgba(255,255,255,0.15)",
+            backdropFilter: "blur(25px)",
+            WebkitBackdropFilter: "blur(25px)",
             border: "1px solid rgba(255,255,255,0.3)",
-            background: "rgba(255,255,255,0.1)",
-            color: "white",
-            cursor: "pointer"
+            boxShadow: "0 30px 60px rgba(0,0,0,0.25)"
           }}
-        />
-      </motion.div>
+        >
+          <h2 style={{ marginBottom: 30 }}>Upload Teacher Answer Key</h2>
+
+          <input
+            type="file"
+            accept=".txt"
+            onChange={uploadKey}
+            style={{
+              padding: 18,
+              width: "100%",
+              borderRadius: 20,
+              border: "1px solid rgba(255,255,255,0.4)",
+              background: "rgba(255,255,255,0.25)"
+            }}
+          />
+        </motion.div>
+
+        <motion.div
+          whileHover={{ scale: 1.03 }}
+          style={{
+            flex: 1,
+            borderRadius: 30,
+            background: "black",
+            color: "white",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: 20,
+            fontWeight: 600,
+            boxShadow: "0 30px 60px rgba(0,0,0,0.4)"
+          }}
+        >
+          Processing...
+        </motion.div>
+      </div>
     </div>
   );
 }

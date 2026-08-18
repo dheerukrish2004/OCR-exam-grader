@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import "../glass.css";
-import bg from "../assets/features-bg.jpg";
+import bg from "../assets/bggf.jpg";
 
 export default function OCR() {
   const navigate = useNavigate();
@@ -11,7 +10,7 @@ export default function OCR() {
 
   const uploadStudent = async () => {
     if (!file) {
-      alert("Please select a file first");
+      alert("Please select a student answer sheet image");
       return;
     }
 
@@ -28,9 +27,8 @@ export default function OCR() {
 
       if (!res.ok) throw new Error("Upload failed");
 
-      // ✅ move to feature 2
       navigate("/key");
-    } catch (err) {
+    } catch {
       alert("Failed to upload student answer sheet");
     } finally {
       setLoading(false);
@@ -49,56 +47,60 @@ export default function OCR() {
         alignItems: "center"
       }}
     >
-      <motion.div
-        className="glass"
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 120 }}
-        style={{
-          width: 440,
-          padding: "50px",
-          textAlign: "center"
-        }}
-      >
-        <h2>Upload Student Answer Sheet</h2>
-
-        <motion.input
-          type="file"
-          onChange={(e) => setFile(e.target.files[0])}
-          whileHover={{ scale: 1.03 }}
+      <div style={{ display: "flex", gap: 40, width: "80%", maxWidth: 1100 }}>
+        
+        {/* LEFT GLASS CARD */}
+        <motion.div
+          whileHover={{ y: -8 }}
           style={{
-            marginTop: 25,
-            padding: 12,
-            borderRadius: 12,
-            border: "1px solid rgba(255,255,255,0.3)",
-            background: "rgba(255,255,255,0.1)",
-            color: "white",
-            cursor: "pointer",
-            width: "100%"
-          }}
-        />
-
-        <motion.button
-          onClick={uploadStudent}
-          disabled={loading}
-          whileHover={{ scale: 1.08 }}
-          whileTap={{ scale: 0.95 }}
-          style={{
-            marginTop: 30,
-            padding: "14px 36px",
+            flex: 2,
+            padding: 60,
             borderRadius: 30,
-            border: "none",
-            background:
-              "linear-gradient(135deg, rgba(170,120,255,0.95), rgba(120,70,220,0.95))",
-            color: "white",
-            fontWeight: 600,
-            cursor: "pointer",
-            opacity: loading ? 0.7 : 1
+            background: "rgba(255,255,255,0.15)",
+            backdropFilter: "blur(25px)",
+            WebkitBackdropFilter: "blur(25px)",
+            border: "1px solid rgba(255,255,255,0.3)",
+            boxShadow: "0 30px 60px rgba(0,0,0,0.25)"
           }}
         >
-          {loading ? "Uploading..." : "Upload & Continue"}
-        </motion.button>
-      </motion.div>
+          <h2 style={{ marginBottom: 30 }}>Upload Student Answer Sheet</h2>
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files[0])}
+            style={{
+              padding: 18,
+              width: "100%",
+              borderRadius: 20,
+              border: "1px solid rgba(255,255,255,0.4)",
+              background: "rgba(255,255,255,0.25)"
+            }}
+          />
+        </motion.div>
+
+        {/* RIGHT BLACK CARD */}
+        <motion.div
+          whileHover={{ scale: 1.03 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={!loading ? uploadStudent : null}
+          style={{
+            flex: 1,
+            borderRadius: 30,
+            background: "black",
+            color: "white",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: 20,
+            fontWeight: 600,
+            cursor: "pointer",
+            boxShadow: "0 30px 60px rgba(0,0,0,0.4)"
+          }}
+        >
+          {loading ? "Uploading..." : "Continue →"}
+        </motion.div>
+      </div>
     </div>
   );
 }

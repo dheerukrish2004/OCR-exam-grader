@@ -1,15 +1,35 @@
-# Python
+
 venv/
+.venv/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
 
-# Runtime generated files
-backend/student.png
-backend/temp.png
-uploads/
-
-# Node
-node_modules/
-
-# Env
 .env
+.env.*
+!.env.example
+
+*.db
+instance/
+
+backend/vector_store/
+
+*.pdf
+uploads/
+backend/uploads/
+backend/page_*.png
+backend/temp.png
+backend/temp_*.png
+backend/*_resized.png
+backend/*_upscaled.png
+backend/r*.png
+
+recovery_dump/
+
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+
+.vscode/
